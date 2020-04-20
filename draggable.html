@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>无标题文档</title>
+<script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="jquery-ui-1.10.3.custom.min.js"></script>
+<style>
+ul{ list-style:none;
+margin:0px;
+padding:0px;
+margin-bottom:10px;}
+
+li{
+	margin:5px;
+	padding:5px;
+	width:150px;
+	border:1px dashed #FC3;}
+</style>
+<script>
+$(document).ready(function(){
+$("#sortable").sortable({
+	revert:true,
+	})
+$("ul li").disableSelect();
+	
+})
+</script>
+</head>
+
+<body>
+
+ 
+<ul id="sortable">
+  <div><li class="ui-state-default">Item 1</li></div>
+  <div><li class="ui-state-default">Item 2</li></div>
+  <li class="ui-state-default">Item 3</li>
+  <li class="ui-state-default">Item 4</li>
+  <li class="ui-state-default">Item 5</li>
+</ul>
+</body>
+</html>

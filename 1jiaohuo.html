@@ -1,0 +1,498 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>无标题文档</title>
+<link href="reset.css" rel="stylesheet"/>
+<link rel="stylesheet" href="fullcalendar.css" />
+<!--<link rel="stylesheet" href="bootstrap.min.css" />-->
+<style>
+.main-content{
+	width:1200px;
+	min-width:800px;
+	margin:0px auto;
+	}
+.col-sm-9{
+	/*暂时定义高度*/
+	width:80%;
+	height:300px;
+	float:left;
+	}
+.col-sm-3{
+	width:20%;
+	height:300px;
+	float:left;
+	}
+
+	
+.col-sm-3 h4{ margin:10px 0px;
+font-size:18px;
+font-weight: 500;
+line-height:30px;
+text-indent:10px;}
+
+.external-event{
+	color:#fff;
+	cursor:pointer;
+	font-size:14px;
+	line-height:28px;
+	margin:6px 10px;
+	text-align:center;}
+	
+.label-grey{background-color: #a0a0a0 !important;/*提高样式规则优先应用权*/}
+.label-success{background-color: #82af6f !important;}
+.label-danger{background-color: #d9534f !important;}
+.label-purple{background-color: #9585bf !important;}
+.label-yellow{background-color: #fee188 !important;}
+.label-pink{background-color: #d6487e !important;}
+.label-info{background-color: #3a87ad !important;}
+.bootbox-body input{ margin:0px 10px;}
+
+.btn-sm, .btn-xs {
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 5px 10px;
+}
+.btn-success {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+    color: #fff;
+	margin:0px 10px;
+}
+.btn {
+    -moz-user-select: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    padding: 6px 12px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.btn-danger {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+    color: #fff;
+	margin:0px 10px;
+}
+
+
+/*取消按钮*/
+.btn-default {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #333;
+	margin:0px 10px;
+}
+.btn-primary{
+	color:#fff;
+	background-color:#428bca;
+	border-color:#357ebd;
+}
+
+/*设置整个遮罩层为黑
+model-backdrop
+bootstrap.js中，会默认在触发弹出框上添加一个蒙层样式model-backdrop
+*/
+ .modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1030;background-color:#000}
+ 
+ /*用于设置遮罩层透明，如果没有设置50%的透明度，会导致整个背景为黑*/
+ .modal-backdrop.fade{opacity:0;filter:alpha(opacity=0)}
+ .modal-backdrop.in{opacity:.5;filter:alpha(opacity=50)}
+
+/*弹出框：更改他的层的顺序，让他排列在上面*/
+ .modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;display:none;overflow:auto;overflow-y:scroll}
+
+ .modal.fade .modal-dialog{
+-webkit-transform:translate(0,-25%);
+ -ms-transform:translate(0,-25%);
+ transform:translate(0,-25%);
+ -webkit-transition:-webkit-transform .3s ease-out;
+ -moz-transition:-moz-transform .3s ease-out;
+ -o-transition:-o-transform .3s ease-out;transition:transform .3s ease-out}
+
+/*.modal和.in之间是同级关系
+出现这种情况：多个div都使用.modal的样式，需要增加一个同级关系来区分
+*/
+ .modal.in .modal-dialog{
+	 
+-webkit-transform:translate(0,0);
+ -ms-transform:translate(0,0);
+ transform:translate(0,0)}
+
+ .modal-dialog{z-index:1050;width:50%;padding:10px;margin-right:auto;margin-left:auto}
+
+
+
+.modal .modal-dialog{
+
+ -webkit-transform:translate(0,-25%);
+ -ms-transform:translate(0,-25%);
+ transform:translate(0,-25%);
+ -webkit-transition:-webkit-transform .3s ease-out;
+ -moz-transition:-moz-transform .3s ease-out;
+ -o-transition:-o-transform .3s ease-out;transition:transform .3s ease-out;
+
+ 
+ }
+ /*让弹出框居中*/
+.modal-dialog {
+    left: 50%;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    right: auto;
+    width: 600px;
+}
+
+
+ .modal-content{position:relative;
+ background-color:#fff;
+ border:1px solid #999;
+ border:1px solid rgba(0,0,0,0.2);
+ border-radius:6px;outline:0;-webkit-box-shadow:0 3px 9px rgba(0,0,0,0.5);
+ box-shadow:0 3px 9px rgba(0,0,0,0.5);
+ background-clip:padding-box}
+
+.modal-header{min-height:16px;padding:15px;border-bottom:1px solid #e5e5e5} 
+.modal-body{position:relative;padding:20px; }
+.modal-footer{padding:19px 20px 20px;margin-top:15px;text-align:right;border-top:1px solid #e5e5e5}
+
+/*添加新事情的中间的输入框*/
+.form-control{ margin:0 auto;
+ display:block;width:90%
+ ;height:34px;
+ padding:6px 12px;
+ font-size:14px;
+ line-height:1.3;
+ color:#555;
+ vertical-align:middle;background-color:#fff;border:1px solid #ccc;border-radius:4px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+ box-shadow:inset 0 1px 1px rgba(0,0,0,0.075);
+ -webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+ transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
+  
+.form-control:focus{border-color:#66afe9;outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);box-shadow:inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6)}
+  
+  /*添加新事情的关闭按钮*/
+.close{float:right;font-size:21px;font-weight:bold;line-height:1;color:#000;text-shadow:0 1px 0 #fff;opacity:.2;filter:alpha(opacity=20)}
+ 
+.close:hover,.close:focus{color:#000;text-decoration:none;cursor:pointer;opacity:.5;filter:alpha(opacity=50)}
+ 
+button.close{padding:0;cursor:pointer;background:transparent;border:0;-webkit-appearance:none}
+
+  
+  
+ 
+ /*让屏幕在大于768px的时候，弹出的输入层占50%的宽度
+ 其他情况是100%*/
+ @media screen and (min-width:768px){
+	 .modal-dialog{
+	 right:auto;
+	 left:50%;width:600px;
+	 padding-top:30px;padding-bottom:30px}
+	 .modal-content{-webkit-box-shadow:0 5px 15px rgba(0,0,0,0.5);
+	 box-shadow:0 5px 15px rgba(0,0,0,0.5)}}
+
+/*today左边的prev和next按钮的样式*/
+.icon-chevron-left,.icon-chevron-right{
+    font-size: 20px;
+	font-weight: bold;
+	line-height:28px;
+    margin: 0px 10px;
+    vertical-align: baseline;
+	 
+}
+.fc-event{
+
+border:1px solid #fff;
+border-radius:2px;
+font-size:14px;
+line-height:18px;
+}
+</style>
+<!--思路
+更换对象？
+：移动哪个就重新创建一个-->
+<script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="fullcalendar.min.js"></script>	
+<script src="bootstrap.min.js"></script>		
+<script src="jquery-ui-1.10.3.custom.min.js"></script><!--左边的日历需要用它-->       
+<script type="text/javascript">
+if("ontouchend" in document) document.write("<script src='jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+<script src="bootbox.min.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+/*右边7个，初始化事件*/
+	$('#external-events div.external-event').each(function(){
+		var eventObject={
+			title: $.trim($(this).text()) // 使用元素的文本内容作为title  trim用于移除字符串两侧的空白字符，可以不用,title就是放在里面的事件
+			};
+	//JQ中的data()方法用于向备选元素添加数据，或者从被选元素获取数据，将eventObject的事件附加到eventObject中
+	/*data用于返回绑定当前事件处理函数时传递的附加数据，属于JQ的event对象
+	data属性的返回值是任意类型，返回绑定当前事件处理函数时传递的附加数据。其类型取决于在绑定当前事件处理函数时所传入的附加数据的类型。
+	*/
+		$(this).data('eventObject', eventObject);
+	//这个如果不加上，事件还是会发生，但是设置的title就没有效了，不会附加上去
+	
+		/*jQuery UI中，Draggable允许使用鼠标移动元素。
+		zIndex:999初始化带有zIndex选项的draggable
+		revert:true当拖拽停止时，元素是否还原到它开始的位置，设置为true,元素会还原
+		revertDuration：还原动画的持续事件，以毫秒计，revert选项false的时候忽略
+		*/ 
+		$(this).draggable({
+			
+			zIndex: 999,
+			revert: true,      // will cause the event to go back to its
+			revertDuration: 0  // 拖动后的再设置当前位置为初始位置为0 original position after the drag
+		});	
+		
+	})
+	
+	//初始化日历
+	var date=new Date();
+	var d=date.getDate();
+	var m=date.getMonth();
+	var y=date.getFullYear();
+	
+	//var calendar=$("#calendar").fullCalendar({option});接受的是一个option对象
+	var calendar=$('#calendar').fullCalendar({
+		
+		/*buttonText试图力每个button显示的文字
+		如：{ prev: '&nbsp;&#9668;&nbsp;', // left triangle
+	
+		next:'&nbsp;&#9658;&nbsp;', // right triangle
+
+    	prevYear:'&nbsp;&lt;&lt;&nbsp;', // <<
+
+   		nextYear:'&nbsp;&gt;&gt;&nbsp;', // >>
+
+    	today: 'today',
+
+   		month: 'month',
+
+   		week: 'week',
+
+   		day: 'day' } 
+		
+		*/
+		buttonText:{
+			prev:'<i class="icon-chevron-left"><</i>',
+			next:'<i class="icon-chevron-right">></i>'
+			},
+		
+		
+		/*header:定义按钮/文本在日历的顶部，false说明不使用header.
+		使用left,center,right三个属性来进行布局，默认是{left:'title',center:'',right:'today prev,next'}
+		*/
+		
+		
+		header:{
+			left:'prev,next,today',
+			center:'center',
+			right:'month,agendaWeek,agendaDay'
+		/*
+		fullCalendar提供五种视图，包括mouth（月视图），basicWeek（基本周视图，左侧不显示具体时间），basicDay（基本日视图，左侧不显示具体时间），agendaWeek（周视图），agendaDay（日视图）。
+		*/	},
+		events:[{
+			title:"All day event",
+			start:new Date(y,m,1),
+			}],
+		
+		editable:true,
+		/*是否可编辑，即进行可拖动和缩放操作*/
+		droppable:true,
+		
+		
+	
+		
+		
+		/*date：当前点击到的日期
+		allDay是否是全天性的
+		*/
+		drop:function(date,allDay){//这个函数被调用时，被删除。
+			//检索被丢弃的元素的存储事件对象
+			var originalEventObject = $(this).data('eventObject');
+			var $extraEventClass = $(this).attr('data-class');
+			
+			//external-event有个data-class事件，用于存储事件条的背景颜色
+			
+			
+			//我们需要复制他，以便多个事件对同一对象的引用
+			var copiedEventObject = $.extend({}, originalEventObject);
+			
+			copiedEventObject.start = date;
+			copiedEventObject.allDay = allDay;
+			if($extraEventClass) 
+				//如果事件的背景颜色存在,让copiedEventObject的样式也加上这个颜色，不然每次拉过去的，都是显示原始的颜色蓝色
+		
+			copiedEventObject['className'] = [$extraEventClass];
+			
+			
+		
+			//使事件在日历上呈现，移动过去就存在
+			//当事件sticks的时候，最后一次参数true  
+			$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+			
+			
+		
+			// 判断"删掉/移除"的复选框是否被选中
+			//if ($('#drop-remove').is(':checked')) {
+				//如果是，从"Draggable Events" 列表中删除该复选框
+			//	$(this).remove();
+			//}
+	},
+	
+	//选中相关：当点击或者拖拽到相关位置时，非否选中对应元素
+	selectable:true,//是否选中对应元素
+	selectHelper:true,//在日程表相关的view里，当选中对应时刻时，是否显示相关信息
+	
+	/*select (callback)被选中时的函数回调
+	allDay是否是全天性的
+	start:当view开始的第一天
+	*/
+	select:function(start,end,allDay){
+		bootbox.prompt("添加新事情",function(title){
+		//加入if判断，让空的时候点击cancel按钮没有什么实际用途
+			if(title!==null){
+			calendar.fullCalendar('renderEvent',{
+				title:title,
+				start:start,
+				end:end,
+				allDay:allDay
+				},true);
+				
+			}
+			})
+			
+			calendar.fullCalendar('unselect');
+			//unselect:选中被取消时的回调
+		},
+		
+	/*
+	eventClick (callback)当一个事件给点击时触发
+	function( event, jsEvent, view ) { }
+	event ：当前的event对象
+	jsEvent ：底层的JS事件
+	view ：当前的view
+	*/
+	eventClick:function(calEvent,jsEvent,view){
+		var form=$("<form>更改事件名称</form>")
+		//append表示在元素的结尾，仍然在内部插入
+		
+		form.append("<input autocomplete=off type=text value='"+ calEvent.title+"'/>");
+		//input 的属性autocomplete 默认为on 其含义代表是否让浏览器自动记录之前输入的值
+		
+		form.append("<button type='submit' class='btn btn-sm btn-success'>保存</button>")
+	
+	var div=bootbox.dialog({
+		message:form,
+		buttons:{
+			"delete":{
+				"label":"删除",
+				"className":"btn-sm btn-danger",
+				"callback":function(){
+					calendar.fullCalendar('removeEvents' , function(ev){
+					return (ev._id == calEvent._id);})
+					},
+				},
+				"close":{
+					"label":"关闭",
+					"class-name":"btn-sm"
+					}
+				
+				
+			}
+		});
+				form.on('submit', function(){
+				calEvent.title = form.find("input[type=text]").val();
+				calendar.fullCalendar('updateEvent', calEvent);
+				div.modal("hide");
+				return false;
+			});
+		
+		
+		/*eventlist存放当前事件
+		var eventlist=$(".fc-event-inner");
+		alert(eventlist.length);
+		$(".fc-view.fc-view-month.fc-grid").sortable({
+		revert:true,
+		})
+		$(".fc-event-inner").disableSelect();
+		$(".fc-event-inner").disableSelect();
+		*/
+	
+	
+	}
+	
+})		
+	 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+})
+</script>
+</head>
+
+<body>
+
+<div class="main_content">
+	<div class="col-sm-9">
+    	<div id="calendar"></div>
+    </div> 
+    <div class="col-sm-3">
+    <h4>Draggable events</h4>
+    <div id="external-events">
+		<div class="external-event label-grey" data-class="label-grey">
+			<i class="icon-move"></i>
+			My Event 1
+		</div>
+
+		<div class="external-event label-success" data-class="label-success">
+			<i class="icon-move"></i>
+			My Event 2
+		</div>
+
+		<div class="external-event label-danger" data-class="label-danger">
+			<i class="icon-move"></i>
+			My Event 3
+		</div>
+
+		<div class="external-event label-purple" data-class="label-purple">
+			<i class="icon-move"></i>
+			My Event 4
+		</div>
+
+		<div class="external-event label-yellow" data-class="label-yellow">
+			<i class="icon-move"></i>
+			My Event 5
+		</div>
+
+		<div class="external-event label-pink" data-class="label-pink">
+			<i class="icon-move"></i>
+			My Event 6
+		</div>
+
+		<div class="external-event label-info" data-class="label-info">
+			<i class="icon-move"></i>
+			My Event 7
+		</div>
+	</div>
+   </div>
+</div>
+
+</body>
+</html>

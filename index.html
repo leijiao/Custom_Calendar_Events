@@ -1,0 +1,321 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>无标题文档</title>
+<link href="reset.css" rel="stylesheet"/>
+<link rel="stylesheet" href="fullcalendar.css" />
+<link rel="stylesheet" href="bootstrap.min.css" />
+
+<style>
+
+
+body {
+    color: #393939;
+	min-width:900px;
+
+}
+.main-content{
+	width:1200px;
+	min-width:800px;
+	margin:0px auto;
+	}
+.col-sm-9{
+	width:80%;
+	float:left;
+	}
+.col-sm-3{
+	width:20%;
+	float:left;
+	}
+.space {
+    padding: 12px 0px;
+    max-height: 1px;
+    min-height: 1px;
+    overflow: hidden;
+}
+.widbox{ margin:20px 20px;
+}
+.external-event{ margin:6px 0px; cursor:pointer; 
+	display:inherit;
+	color:#fff;
+	font-size:14px;
+	line-height:28px;
+	}	
+	
+/*格子中右上角样式*/
+.fc-grid .fc-day-number{color:#2e6589;
+margin:6px;}
+
+.label-grey{background-color: #a0a0a0 !important;/*提高样式规则优先应用权*/}
+.label-success{background-color: #82af6f !important;}
+.label-danger{background-color: #d9534f !important;}
+.label-purple{background-color: #9585bf !important;}
+.label-yellow{background-color: #fee188 !important;}
+.label-pink{background-color: #d6487e !important;}
+.label-info{background-color: #3a87ad !important;}
+
+.fc-event{
+
+border:1px solid #fff;
+border-radius:2px;
+font-size:14px;
+line-height:18px;
+}
+
+.icon-move{	display:block;
+	float:left; background:url("1.png"); width:28px; height:28px;}
+
+.icon-chevron-left,.icon-chevron-right{
+	font-weight:bold;
+	height:30px;
+	line-height:30px;
+	color:#999;}
+
+</style>
+<script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="fullcalendar.min.js"></script>
+		
+<script src="bootstrap.min.js"></script>		
+<script src="jquery-ui-1.10.3.custom.min.js"></script><!--左边的日历需要用它-->
+        
+<script type="text/javascript">
+if("ontouchend" in document) document.write("<script src='jquery.mobile.custom.min.js'>"+"<"+"/script>");
+</script>
+
+<script src="bootbox.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	/**/
+	//初始化外部事件,让右边的7个事件可以一起使用
+	$('#external-events div.external-event').each(function(){
+		var eventObject={
+			title: $.trim($(this).text()) // 使用元素的文本内容作为title  trim用于移除字符串两侧的空白字符，可以不用,title就是放在里面的事件
+			};
+	//JQ中的data()方法用于向备选元素添加数据，或者从被选元素获取数据，将eventObject的事件附加到eventObject中
+	/*data用于返回绑定当前事件处理函数时传递的附加数据，属于JQ的event对象
+	data属性的返回值是任意类型，返回绑定当前事件处理函数时传递的附加数据。其类型取决于在绑定当前事件处理函数时所传入的附加数据的类型。
+	*/
+		$(this).data('eventObject', eventObject);
+
+		/*jQuery UI中，Draggable允许使用鼠标移动元素。
+		zIndex:999初始化带有zIndex选项的draggable
+		revert:true当拖拽停止时，元素是否还原到它开始的位置，设置为true,元素会还原
+		revertDuration：还原动画的持续事件，以毫秒计，revert选项false的时候忽略
+		*/ 
+		$(this).draggable({
+			
+			zIndex: 999,
+			revert: true,      // will cause the event to go back to its
+			revertDuration: 0  // 拖动后的再设置当前位置为初始位置为0 original position after the drag
+		});	
+	})
+		
+			
+	//初始化日历	
+	var date=new Date();
+	var d=date.getDate();
+	var m=date.getMonth();
+	var y=date.getFullYear();
+	
+	//var calendar=$("#calendar").fullCalendar({option});接受的是一个option对象
+	var calendar = $('#calendar').fullCalendar({
+		 buttonText: {
+			prev: '<i class="icon-chevron-left"><</i>',
+			next: '<i class="icon-chevron-right">></i>'
+		},
+	
+
+		/* header: 定义按钮/文本在日历的顶部, false说明不使用header., 使用left, center, right三个属性来进行布局, 默认是{left: 'title', center: '', right: 'today prev, next'*/ 
+		header:{
+			left:'prev,next,today',
+			center:'center',
+			right:'month,agendaWeek,agendaDay'
+			},
+			
+	/*配置事件源，即初始化事件（预览时候看到）
+		该函数需要接收参数start,end,callback,分别表示专区日程事件的开始时间，结束时间，抓取结束后的回调。		
+		*/
+		
+	events: [
+		{
+			title: 'All Day Event',
+			start: new Date(y, m, 1),//本年本月1号显示All Day Event事件
+			//className: 'label-important'
+		},
+	/*	{
+			title: 'Long Event',
+			start: new Date(y, m, d-5),//五天前事件
+			end: new Date(y, m, d-2),
+			className: 'label-success'//配置样式用label-success
+		},
+		{
+			title: 'Some Event',
+			start: new Date(y, m, d-3, 16, 0),//16点，即下午4点
+			allDay: false
+		}*/
+		],
+		
+		
+		editable: true,
+		droppable: true, //这让事情被落在日历上
+		drop: function(date, allDay) { // 这个函数被调用时被删除		
+			//检索被丢弃的元素的存储事件对象
+			var originalEventObject = $(this).data('eventObject');
+			var $extraEventClass = $(this).attr('data-class');
+			
+			
+			//我们需要复制它，以便多个事件没有对同一对象的引用
+			var copiedEventObject = $.extend({}, originalEventObject);
+			
+			// assign it the date that was reported
+			copiedEventObject.start = date;
+			copiedEventObject.allDay = allDay;
+			if($extraEventClass) 
+			copiedEventObject['className'] = [$extraEventClass];
+			
+			// 使事件在日历上呈现
+			// 当事件sticks的时候，最后一个参数true  (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+			$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+			
+			// 判断"删掉/移除"的复选框是否被选中
+			if ($('#drop-remove').is(':checked')) {
+				//如果是，从"Draggable Events" 列表中删除该复选框
+				$(this).remove();
+			}
+			
+		}
+		,
+		selectable: true,
+		selectHelper: true,
+		select: function(start, end, allDay) {
+		
+			bootbox.prompt("添加新的事情:", function(title) {
+				//if (title !== null) {
+					calendar.fullCalendar('renderEvent',
+						{
+							title: title,
+							start: start,
+							end: end,
+							allDay: allDay
+						},
+						true // make the event "stick"
+					);
+				//}
+			});
+			
+
+			calendar.fullCalendar('unselect');
+			
+		}
+		,
+		
+		
+	
+		
+		eventClick: function(calEvent, jsEvent, view) {
+			var form = $("<form>更改事件名称</form>");
+			form.append("<input  autocomplete=off type=text value='" + calEvent.title + "' /> ");
+			form.append("<button type='submit' class='btn btn-sm btn-success'>保存</button>");
+			alert(calEvent.start);
+			var div = bootbox.dialog({
+				message: form,
+			
+				buttons: {
+					"delete" : {
+						"label" : "删除",
+						"className" : "btn-sm btn-danger",
+						"callback": function() {
+							calendar.fullCalendar('removeEvents' , function(ev){
+								return (ev._id == calEvent._id);
+							})
+						}
+					} ,
+					"close" : {
+						"label" : "关闭",
+						"className" : "btn-sm"
+					} 
+				}
+
+			});
+			
+			form.on('submit', function(){
+				calEvent.title = form.find("input[type=text]").val();
+				calendar.fullCalendar('updateEvent', calEvent);
+				div.modal("hide");
+				return false;
+			});
+			
+		}
+		
+	});
+
+
+
+		
+})		
+		
+	
+
+</script>
+</head>
+
+<body>
+
+<div class="main_contain">
+    	<div class="col-sm-9">
+        	<div class="space"></div>
+        	<div id="calendar"></div>
+        </div><!--col-sm-9-->
+        
+        
+    	<div class="col-sm-3">
+        
+            	<div class="wid-header"><h4>Draggable events</h4></div>
+           		
+                    	<div id="external-events">
+							<div class="external-event label-grey" data-class="label-grey">
+							<i class="icon-move"></i>
+							My Event 1
+							</div>
+
+							<div class="external-event label-success" data-class="label-success">
+							<i class="icon-move"></i>
+							My Event 2
+							</div>
+
+							<div class="external-event label-danger" data-class="label-danger">
+							<i class="icon-move"></i>
+							My Event 3
+							</div>
+
+							<div class="external-event label-purple" data-class="label-purple">
+							<i class="icon-move"></i>
+							My Event 4
+							</div>
+
+							<div class="external-event label-yellow" data-class="label-yellow">
+							<i class="icon-move"></i>
+							My Event 5
+							</div>
+
+							<div class="external-event label-pink" data-class="label-pink">
+							<i class="icon-move"></i>
+							My Event 6
+							</div>
+
+							<div class="external-event label-info" data-class="label-info">
+							<i class="icon-move"></i>
+							My Event 7
+							</div>
+						</div>
+                  
+                	
+               
+          
+        </div><!--col-sm-3-->        
+</div><!--main_contain-->
+
+</body>
+</html>
